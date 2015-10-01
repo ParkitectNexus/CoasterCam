@@ -162,6 +162,14 @@ namespace CoasterCam
 
             _cam = _coasterCam.AddComponent<Camera>();
 
+            UIWorldOverlayController.Instance.gameObject.SetActive(false);
+
+            //EmotiFloat[] emotis = GameObject.FindObjectsOfType<EmotiFloat>() as EmotiFloat[];
+
+            //foreach (EmotiFloat emotiFloat in emotis)
+            //{
+            //    emotiFloat.gameObject.SetActive(false);
+            //}
 
             _cam.nearClipPlane = 0.1f;
             _cam.farClipPlane = 50f;
@@ -188,6 +196,8 @@ namespace CoasterCam
             RestoreGraphicSettings();
 
             Destroy(_coasterCam);
+
+            UIWorldOverlayController.Instance.gameObject.SetActive(true);
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
