@@ -29,7 +29,6 @@ namespace CoasterCam
         float currentAvgFPS = 0;
 
         int frameCount = 0;
-        float nextUpdate = 0.0f;
         float fps = 0.0f;
         float updateRate = 10.0f;  // 4 updates per sec.
 
@@ -38,31 +37,29 @@ namespace CoasterCam
             Instance = this;
 
             DontDestroyOnLoad(gameObject);
-
-            nextUpdate = Time.time;
         }
 
         private void Update()
         {
-            UnityEngine.Object[] attractionStates = FindObjectsOfType(typeof(AttractionStatsTab));
+            //UnityEngine.Object[] attractionStates = FindObjectsOfType(typeof(AttractionStatsTab));
 
-            //Debug.Log(attractionStates.Length);
+            ////Debug.Log(attractionStates.Length);
 
-            foreach (AttractionStatsTab attractionState in attractionStates)
-            {
-                if (attractionState.GetComponentInChildren<CoasterCamStarter>() == null)
-                {
-                    Debug.Log("Creating button");
-                    GameObject button = new GameObject();
-                    button.transform.parent = attractionState.transform;
-                    button.AddComponent<RectTransform>();
-                    button.AddComponent<Button>();
-                    button.transform.position = new Vector3(20, 20, 20);
-                    //button.GetComponent<RectTransform>().SetSize(size);
-                    //button.GetComponent<Button>().onClick.AddListener(method);
-                    //GameObject btn = Instantiate(new UnityEngine.UI.Button);
-                }
-            }
+            //foreach (AttractionStatsTab attractionState in attractionStates)
+            //{
+            //    if (attractionState.GetComponentInChildren<CoasterCamStarter>() == null)
+            //    {
+            //        Debug.Log("Creating button");
+            //        GameObject button = new GameObject();
+            //        button.transform.parent = attractionState.transform;
+            //        button.AddComponent<RectTransform>();
+            //        button.AddComponent<Button>();
+            //        button.transform.position = new Vector3(20, 20, 20);
+            //        //button.GetComponent<RectTransform>().SetSize(size);
+            //        //button.GetComponent<Button>().onClick.AddListener(method);
+            //        //GameObject btn = Instantiate(new UnityEngine.UI.Button);
+            //    }
+            //}
 
 
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide)
