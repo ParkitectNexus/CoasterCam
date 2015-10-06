@@ -1,1 +1,7 @@
-{"AssetBundleDir":null,"AssetBundlePrefix":null,"BaseDir":"CoasterCam","CompilerVersion":"v4.0","CodeFiles":[],"EntryPoint":"CoasterCam.Main","IsDevelopment":true,"IsEnabled":true,"Name":"Coaster Cam","Project":"CoasterCam.csproj","Tag":null,"ReferencedAssemblies":[],"Repository":null}
+{
+	"BaseDir": "CoasterCam",
+	"EntryPoint": "CoasterCam.Main",
+	"IsDevelopment": true,
+	"Name": "Coaster Cam",
+	"Project": "CoasterCam.csproj",
+}
