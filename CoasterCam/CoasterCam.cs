@@ -134,8 +134,8 @@ namespace CoasterCam
             QualitySettings.shadowDistance = 0f;
             QualitySettings.antiAliasing = 2;
 
-            if (Screen.fullScreen)
-                Screen.SetResolution((int)(_origResoWidth / 1.2f), (int)(_origResoHeight / 1.2f), Screen.fullScreen);
+            //if (Screen.fullScreen)
+            //    Screen.SetResolution((int)(_origResoWidth / 1.2f), (int)(_origResoHeight / 1.2f), Screen.fullScreen);
         }
 
         private void RestoreGraphicSettings()
@@ -145,8 +145,8 @@ namespace CoasterCam
             QualitySettings.shadowDistance = _origShadowDist;
             QualitySettings.SetQualityLevel(_origQualityLevel);
 
-            if (Screen.fullScreen)
-                Screen.SetResolution(_origResoWidth, _origResoHeight, Screen.fullScreen);
+            //if (Screen.fullScreen)
+            //    Screen.SetResolution(_origResoWidth, _origResoHeight, Screen.fullScreen);
         }
 
         public void EnterCoasterCam(GameObject onGo)
