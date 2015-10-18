@@ -22,13 +22,11 @@ namespace CoasterCam
 
         private Camera _cam;
         
-        float _fps = 0.0f;
-        
-        private Rect _rect;
+        float _fps;
+       
+        private readonly List<Transform> _seats = new List<Transform>();
 
-        private List<Transform> _seats = new List<Transform>();
-
-        private int _seatIndex = 0;
+        private int _seatIndex;
 
         private void Awake()
         {

@@ -15,7 +15,7 @@ namespace CoasterCam
 
         public void onDisabled()
         {
-            UnityEngine.Object.Destroy(go);
+            Object.Destroy(go);
         }
 
         public string Name { get { return "CoasterCam"; } }
