@@ -1,36 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using Parkitect.UI;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.VR;
 
 namespace CoasterCam
 {
     internal class CoasterCam : MonoBehaviour
     {
         private GameObject _coasterCam;
+        private GameObject _origCam;
 
         private bool _isOnRide;
-
-        private Attraction _currentAttraction;
-
+        
         public static CoasterCam Instance;
-
-        private ICamLocationFinder _locationFinder;
-
+        
         private float _origShadowDist;
         private int _origQualityLevel;
         private int _origResoWidth;
         private int _origResoHeight;
 
         private Camera _cam;
+        
+        float _fps = 0.0f;
+        
+        private Rect _rect;
 
-        // fps stuff
-        int qty = 0;
-        float currentAvgFPS = 0;
+        private List<Transform> _seats = new List<Transform>();
 
-        int frameCount = 0;
-        float fps = 0.0f;
-        float updateRate = 10.0f;  // 4 updates per sec.
+        private int _seatIndex = 0;
 
         private void Awake()
         {
@@ -41,38 +39,19 @@ namespace CoasterCam
 
         private void Update()
         {
-            //UnityEngine.Object[] attractionStates = FindObjectsOfType(typeof(AttractionStatsTab));
-
-            ////Debug.Log(attractionStates.Length);
-
-            //foreach (AttractionStatsTab attractionState in attractionStates)
-            //{
-            //    if (attractionState.GetComponentInChildren<CoasterCamStarter>() == null)
-            //    {
-            //        Debug.Log("Creating button");
-            //        GameObject button = new GameObject();
-            //        button.transform.parent = attractionState.transform;
-            //        button.AddComponent<RectTransform>();
-            //        button.AddComponent<Button>();
-            //        button.transform.position = new Vector3(20, 20, 20);
-            //        //button.GetComponent<RectTransform>().SetSize(size);
-            //        //button.GetComponent<Button>().onClick.AddListener(method);
-            //        //GameObject btn = Instantiate(new UnityEngine.UI.Button);
-            //    }
-            //}
-
-
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide)
             {
-                GameObject _ride = GameObjectUnderMouse();
+                GameObject ride = GameObjectUnderMouse();
 
-                AttractionTypeDecider atd = new AttractionTypeDecider(_ride);
-
-                if(atd.GetType() == AttractionTypeDecider.AttractionType.Tracked)
+                if (ride != null)
                 {
-                    _locationFinder = new CarFinder(_ride.GetComponentInParent<TrackedRide>());
+                    _seats.Clear();
+                    _seatIndex = 0;
 
-                    EnterCoasterCam(_locationFinder.GetNextLocation());
+                    Utility.recursiveFindTransformsStartingWith("seat", ride.GetComponentInParent<Attraction>().transform, _seats);
+
+                    if (_seats.Count > 0)
+                        EnterCoasterCam(_seats[_seatIndex].gameObject);
                 }
             }
             else if (Input.GetKeyUp(KeyCode.R))
@@ -82,25 +61,39 @@ namespace CoasterCam
 
             if (_isOnRide)
             {
-                if (Input.GetKeyUp(KeyCode.F))
+                if (Math.Abs(Input.GetAxis("Mouse ScrollWheel")) > 0.1)
                 {
-                    EnterCoasterCam(_locationFinder.GetNextLocation());
+                    LeaveCoasterCam();
+
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                    {
+                        if (++_seatIndex == _seats.Count)
+                            _seatIndex = 0;
+                    }
+                    
+                    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                    {
+                        if (--_seatIndex < 0)
+                            _seatIndex = _seats.Count - 1;
+                    }
+
+                    EnterCoasterCam(_seats[_seatIndex].gameObject);
                 }
 
-                AdaptFarClipPaneToFPS();
+                AdaptFarClipPaneToFps();
             }
         }
 
-        private void AdaptFarClipPaneToFPS()
+        private void AdaptFarClipPaneToFps()
         {
-            fps = 1.0f / Time.deltaTime;
+            _fps = 1.0f / Time.deltaTime;
 
-            if (fps < 50)
+            if (_fps < 50)
             {
                 _cam.farClipPlane = Math.Max(40, _cam.farClipPlane - 0.3f);
             }
 
-            if (fps > 55)
+            if (_fps > 55)
             {
                 _cam.farClipPlane = Math.Min(120, _cam.farClipPlane + 0.2f);
             }
@@ -155,29 +148,36 @@ namespace CoasterCam
 
             LowerGraphicSettings();
 
-            _coasterCam = new GameObject();
-
-            _cam = _coasterCam.AddComponent<Camera>();
-
             UIWorldOverlayController.Instance.gameObject.SetActive(false);
 
-            Camera.main.GetComponent<CameraController>().enabled = false;
+            _origCam = Camera.main.gameObject;
 
-            _cam.nearClipPlane = 0.1f;
-            _cam.farClipPlane = 50f;
+            _origCam.SetActive(false);
+
+            //if (VRDevice.isPresent)
+            //{
+            //    VRSettings.loadedDevice = VRDeviceType.Oculus;
+            //}
+
+            _coasterCam = new GameObject();
+            _coasterCam.AddComponent<Camera>();
+            _coasterCam.GetComponent<Camera>().nearClipPlane = 0.05f;
+            _coasterCam.GetComponent<Camera>().farClipPlane = 100f;
 
             _coasterCam.AddComponent<AudioListener>();
 
             _coasterCam.transform.parent = onGo.transform;
-            _coasterCam.transform.localPosition = new Vector3(0, 0.7f, 0);
+            _coasterCam.transform.localPosition = new Vector3(0, 0.35f, 0.1f);
             _coasterCam.transform.localRotation = Quaternion.identity;
 
             _coasterCam.AddComponent<MouseLookAround>();
-
+            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
             _isOnRide = true;
+
+            InputTracking.Recenter();
         }
 
         public void LeaveCoasterCam()
@@ -187,9 +187,14 @@ namespace CoasterCam
 
             RestoreGraphicSettings();
 
-            Destroy(_coasterCam);
+            //if (VRDevice.isPresent)
+            //{
+            //    VRSettings.loadedDevice = VRDeviceType.None;
+            //}
 
-            Camera.main.GetComponent<CameraController>().enabled = true;
+            _origCam.SetActive(true);
+
+            Destroy(_coasterCam);
 
             UIWorldOverlayController.Instance.gameObject.SetActive(true);
 

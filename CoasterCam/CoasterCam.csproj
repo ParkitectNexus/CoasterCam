@@ -9,15 +9,16 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CoasterCam</RootNamespace>
     <AssemblyName>CoasterCam</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\..\Desktop\Parkitect\Mods\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -37,14 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Parkitect_Data\Managed\DOTween.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\Parkitect_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -54,14 +50,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttractionTypeDecider.cs" />
-    <Compile Include="CarFinder.cs" />
-    <Compile Include="CoasterCamStarter.cs" />
     <Compile Include="MouseLookAround.cs" />
-    <Compile Include="ICamLocationFinder.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="CoasterCam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CoasterCam\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
