@@ -40,16 +40,26 @@ namespace CoasterCam
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide)
             {
                 GameObject ride = GameObjectUnderMouse();
-
+                
                 if (ride != null)
                 {
-                    _seats.Clear();
-                    _seatIndex = 0;
+                    Attraction attr = ride.GetComponentInParent<Attraction>();
 
-                    Utility.recursiveFindTransformsStartingWith("seat", ride.GetComponentInParent<Attraction>().transform, _seats);
+                    if (attr == null)
+                    {
+                        attr = ride.GetComponentInChildren<Attraction>();
+                    }
 
-                    if (_seats.Count > 0)
-                        EnterCoasterCam(_seats[_seatIndex].gameObject);
+                    if (attr != null)
+                    {
+                        _seats.Clear();
+                        _seatIndex = 0;
+
+                        Utility.recursiveFindTransformsStartingWith("seat", attr.transform, _seats);
+
+                        if (_seats.Count > 0)
+                            EnterCoasterCam(_seats[_seatIndex].gameObject);
+                    }
                 }
             }
             else if (Input.GetKeyUp(KeyCode.R))
