@@ -171,6 +171,8 @@ namespace CoasterCam
             _coasterCam.transform.localRotation = Quaternion.identity;
 
             _coasterCam.AddComponent<MouseLookAround>();
+
+            _cam = _coasterCam.GetComponent<Camera>();
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
