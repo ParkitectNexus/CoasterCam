@@ -20,5 +20,6 @@ namespace CoasterCam
 
         public string Name { get { return "CoasterCam"; } }
         public string Description { get { return "Camera for riding coasters"; } }
+        public string Identifier { get; set; }
     }
 }
