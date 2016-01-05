@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Parkitect.UI;
 using UnityEngine;
@@ -121,56 +121,25 @@ namespace CoasterCam
             return null;
         }
 
-        private void LowerGraphicSettings()
-        {
-            Application.targetFrameRate = -1;
-
-            _origShadowDist = QualitySettings.shadowDistance;
-            _origQualityLevel = QualitySettings.GetQualityLevel();
-            _origResoWidth = Screen.width;
-            _origResoHeight = Screen.height;
-            
-            QualitySettings.SetQualityLevel(0);
-            QualitySettings.shadowDistance = 0f;
-            QualitySettings.antiAliasing = 2;
-
-            //if (Screen.fullScreen)
-            //    Screen.SetResolution((int)(_origResoWidth / 1.2f), (int)(_origResoHeight / 1.2f), Screen.fullScreen);
-        }
-
-        private void RestoreGraphicSettings()
-        {
-            Application.targetFrameRate = 60;
-
-            QualitySettings.shadowDistance = _origShadowDist;
-            QualitySettings.SetQualityLevel(_origQualityLevel);
-
-            //if (Screen.fullScreen)
-            //    Screen.SetResolution(_origResoWidth, _origResoHeight, Screen.fullScreen);
-        }
-
         public void EnterCoasterCam(GameObject onGo)
         {
             if (_isOnRide)
                 return;
 
-            LowerGraphicSettings();
-
             UIWorldOverlayController.Instance.gameObject.SetActive(false);
+
+            string tag = Camera.main.tag;
 
             _origCam = Camera.main.gameObject;
 
             _origCam.SetActive(false);
 
-            //if (VRDevice.isPresent)
-            //{
-            //    VRSettings.loadedDevice = VRDeviceType.Oculus;
-            //}
-
             _coasterCam = new GameObject();
+            _coasterCam.tag = tag;
             _coasterCam.AddComponent<Camera>();
             _coasterCam.GetComponent<Camera>().nearClipPlane = 0.05f;
             _coasterCam.GetComponent<Camera>().farClipPlane = 100f;
+            _coasterCam.GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
 
             _coasterCam.AddComponent<AudioListener>();
 
@@ -194,14 +163,7 @@ namespace CoasterCam
         {
             if (!_isOnRide)
                 return;
-
-            RestoreGraphicSettings();
-
-            //if (VRDevice.isPresent)
-            //{
-            //    VRSettings.loadedDevice = VRDeviceType.None;
-            //}
-
+            
             _origCam.SetActive(true);
 
             Destroy(_coasterCam);
