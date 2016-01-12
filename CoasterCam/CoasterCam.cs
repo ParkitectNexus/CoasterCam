@@ -37,7 +37,7 @@ namespace CoasterCam
 
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.R) && !_isOnRide)
+            if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused())
             {
                 GameObject ride = GameObjectUnderMouse();
                 
