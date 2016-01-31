@@ -109,15 +109,18 @@ namespace CoasterCam
 
         private GameObject GameObjectUnderMouse()
         {
+            GameController.Instance.enableVisibleMouseColliders();
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
+                GameController.Instance.disableMouseColliders();
                 return hit.transform.gameObject;
             }
 
+            GameController.Instance.disableMouseColliders();
             return null;
         }
 
