@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Parkitect.UI;
 using UnityEngine;
 using UnityEngine.VR;
+using Random = UnityEngine.Random;
 
 namespace CoasterCam
 {
@@ -14,11 +15,17 @@ namespace CoasterCam
         private bool _isOnRide;
         
         public static CoasterCam Instance;
-        
+
+        private float _shakeIntensity;
+
+        private Vector3 originPosition;
+        private Quaternion originRotation;
         private float _origShadowDist;
         private int _origQualityLevel;
         private int _origResoWidth;
         private int _origResoHeight;
+
+        private Vector3 _lastPosition;
 
         private Camera _cam;
         
@@ -34,7 +41,7 @@ namespace CoasterCam
 
             DontDestroyOnLoad(gameObject);
         }
-
+        
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused())
@@ -89,6 +96,29 @@ namespace CoasterCam
                 }
 
                 AdaptFarClipPaneToFps();
+            }
+        }
+
+        void FixedUpdate()
+        {
+            if (_isOnRide)
+            {
+                _shakeIntensity = Vector3.Distance(_lastPosition, _cam.transform.position) / 20;
+
+                _lastPosition = _cam.transform.position;
+
+                Debug.Log(_shakeIntensity);
+
+                if (_shakeIntensity > 0)
+                {
+                    _cam.transform.localPosition = Random.insideUnitSphere * _shakeIntensity + new Vector3(0, 0.35f, 0.1f);
+
+                    _cam.transform.rotation = new Quaternion(
+                                    _cam.transform.rotation.x + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.y + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.z + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.w + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f);
+                }
             }
         }
 
@@ -158,8 +188,10 @@ namespace CoasterCam
             Cursor.visible = false;
 
             _isOnRide = true;
-
-            InputTracking.Recenter();
+            
+            originPosition = _cam.transform.position;
+            originRotation = _cam.transform.rotation;
+            _lastPosition = _cam.transform.position;
         }
 
         public void LeaveCoasterCam()
