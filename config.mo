@@ -1,0 +1,1 @@
+<config><repository>ParkitectNexus/CoasterCam</repository></config>
