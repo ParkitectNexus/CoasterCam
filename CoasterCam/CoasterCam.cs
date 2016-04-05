@@ -16,7 +16,7 @@ namespace CoasterCam
         
         public static CoasterCam Instance;
 
-        private float _intensity;
+        private float _shakeIntensity;
 
         private Vector3 originPosition;
         private Quaternion originRotation;
@@ -103,11 +103,22 @@ namespace CoasterCam
         {
             if (_isOnRide)
             {
-                _intensity = Vector3.Distance(_lastPosition, _cam.transform.position) / 20;
+                _shakeIntensity = Vector3.Distance(_lastPosition, _cam.transform.position) / 20;
 
                 _lastPosition = _cam.transform.position;
-                
-                _cam.fieldOfView = 60 + Math.Min(60, 20 * (_intensity * 500));
+
+                Debug.Log(_shakeIntensity);
+
+                if (_shakeIntensity > 0)
+                {
+                    _cam.transform.localPosition = Random.insideUnitSphere * _shakeIntensity + new Vector3(0, 0.35f, 0.1f);
+
+                    _cam.transform.rotation = new Quaternion(
+                                    _cam.transform.rotation.x + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.y + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.z + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f,
+                                    _cam.transform.rotation.w + Random.Range(-_shakeIntensity, _shakeIntensity) * 0.6f);
+                }
             }
         }
 
