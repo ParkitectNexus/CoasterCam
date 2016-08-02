@@ -37,9 +37,8 @@ namespace CoasterCam
 
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused())
-            {
-                GameObject ride = GameObjectUnderMouse();
+            if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused()) {
+	            SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
                 
                 if (ride != null)
                 {
@@ -105,23 +104,6 @@ namespace CoasterCam
             {
                 _cam.farClipPlane = Math.Min(120, _cam.farClipPlane + 0.2f);
             }
-        }
-
-        private GameObject GameObjectUnderMouse()
-        {
-            GameController.Instance.enableVisibleMouseColliders();
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-            {
-                GameController.Instance.disableMouseColliders();
-                return hit.transform.gameObject;
-            }
-
-            GameController.Instance.disableMouseColliders();
-            return null;
         }
 
         public void EnterCoasterCam(GameObject onGo)
