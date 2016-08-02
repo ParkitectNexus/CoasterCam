@@ -33,9 +33,9 @@ namespace CoasterCam
             Instance = this;
 
             DontDestroyOnLoad(gameObject);
-        }
-
-        private void Update()
+		}
+		
+		private void Update()
         {
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused()) {
 	            SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
@@ -122,7 +122,9 @@ namespace CoasterCam
             _coasterCam = new GameObject();
             _coasterCam.tag = tag;
             _coasterCam.AddComponent<Camera>();
-            _coasterCam.GetComponent<Camera>().nearClipPlane = 0.05f;
+
+			CullingGroupManager.Instance.setTargetCamera(_coasterCam.GetComponent<Camera>());
+			_coasterCam.GetComponent<Camera>().nearClipPlane = 0.05f;
             _coasterCam.GetComponent<Camera>().farClipPlane = 100f;
             _coasterCam.GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
 
@@ -150,8 +152,9 @@ namespace CoasterCam
                 return;
             
             _origCam.SetActive(true);
+			CullingGroupManager.Instance.setTargetCamera(_origCam.GetComponent<Camera>());
 
-            Destroy(_coasterCam);
+			Destroy(_coasterCam);
 
             UIWorldOverlayController.Instance.gameObject.SetActive(true);
 
