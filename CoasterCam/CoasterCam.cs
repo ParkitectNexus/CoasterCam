@@ -33,12 +33,12 @@ namespace CoasterCam
             Instance = this;
 
             DontDestroyOnLoad(gameObject);
-		}
+	}
 		
-		private void Update()
+	private void Update()
         {
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused()) {
-	            SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
+	        SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
                 
                 if (ride != null)
                 {
@@ -142,8 +142,6 @@ namespace CoasterCam
             Cursor.visible = false;
 
             _isOnRide = true;
-
-            InputTracking.Recenter();
         }
 
         public void LeaveCoasterCam()
