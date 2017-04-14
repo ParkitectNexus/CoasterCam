@@ -39,26 +39,22 @@ namespace CoasterCam
         {
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused()) {
 	            SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
-                
-                if (ride != null)
+
+	            Attraction attr = ride.GetComponentInChildren<Attraction>();
+
+	            if (attr == null) {
+		            attr = ride.GetComponentInParent<Attraction>();
+	            }
+
+                if (attr != null)
                 {
-                    Attraction attr = ride.GetComponentInParent<Attraction>();
+                    _seats.Clear();
+                    _seatIndex = 0;
 
-                    if (attr == null)
-                    {
-                        attr = ride.GetComponentInChildren<Attraction>();
-                    }
+                    Utility.recursiveFindTransformsStartingWith("seat", attr.transform, _seats);
 
-                    if (attr != null)
-                    {
-                        _seats.Clear();
-                        _seatIndex = 0;
-
-                        Utility.recursiveFindTransformsStartingWith("seat", attr.transform, _seats);
-
-                        if (_seats.Count > 0)
-                            EnterCoasterCam(_seats[_seatIndex].gameObject);
-                    }
+                    if (_seats.Count > 0)
+                        EnterCoasterCam(_seats[_seatIndex].gameObject);
                 }
             }
             else if (Input.GetKeyUp(KeyCode.R))
