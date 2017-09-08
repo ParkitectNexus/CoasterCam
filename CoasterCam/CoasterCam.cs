@@ -38,12 +38,12 @@ namespace CoasterCam
 		private void Update()
         {
             if (Input.GetKeyUp(KeyCode.R) && !_isOnRide && !UIUtility.isInputFieldFocused()) {
-	            SerializedMonoBehaviour ride = Utility.getObjectBelowMouse().hitObject;
+	            var ride = Utility.getObjectBelowMouse().hitObject;
 
-	            Attraction attr = ride.GetComponentInChildren<Attraction>();
+	            Attraction attr = ride.gameObject.GetComponentInChildren<Attraction>();
 
 	            if (attr == null) {
-		            attr = ride.GetComponentInParent<Attraction>();
+		            attr = ride.gameObject.GetComponentInParent<Attraction>();
 	            }
 
                 if (attr != null)
